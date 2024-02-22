@@ -20,13 +20,16 @@
 
     <main>
         <section class="sectionTop" id="searchbar">
-        <input type="text" placeholder="search artist">
-        <button>search</button>
+            <form action="/search" method="GET">
+                <input type="text" name="search" placeholder="search artist">
+                <button type="submit">search</button>
+            </form>
+
         </section>
 
         <section class="sectionBot">
             {{range .}}
-            <div >
+            <div>
                 <article class="article">
                     <img src="{{.Image}}" alt="{{.Name}}">
                     <h2>{{.Name}}</h2>

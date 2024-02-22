@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
-	"text/template"
+	"strings"
 )
 
 type InfoArtists struct {
@@ -71,6 +72,8 @@ func main() {
 	http.Handle("/asset/", http.StripPrefix("/asset/", http.FileServer(http.Dir("asset"))))
 
 	http.HandleFunc("/", handler)
+
+	http.HandleFunc("/search", searchHandle)
 
 	// Lance le serveur
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -246,4 +249,44 @@ func all(dataAPI *GroupieTracker) {
 
 		fmt.Println("")
 	}
+}
+
+func searchHandle(w http.ResponseWriter, r *http.Request) {
+
+	// Récupérez les données de l'API
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+	// Recherchez les artistes dont le nom correspond à la requête
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+	// Récupérez la requête de recherche depuis les paramètres de l'URL
+	query := r.URL.Query().Get("search")
+
+	var result []InfoArtists
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
+			result = append(result, artist)
+			log.Printf("Artiste trouvé : %v\n", artist)
+		}
+	}
+
+	// Affichez les résultats dans le modèle HTML
+	tmpl, err := template.ParseFiles(templateHtml)
+	if err != nil {
+		http.Error(w, "Erreur lors de la lecture du modèle HTML", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, result)
+	if err != nil {
+		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
+		return
+	}
+
+	return
 }
