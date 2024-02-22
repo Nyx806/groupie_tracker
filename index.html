@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="asset/style/style.css">
+    <title>groupie tracer</title>
+</head>
+<body>
+        <header>
+            <nav> 
+                <h1>My First Heading</h1>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Me</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+    <main>
+        <section class="sectionTop" id="searchbar">
+        <input type="text" placeholder="search artist">
+        <button>search</button>
+        </section>
+
+        <section class="sectionBot">
+            {{range .}}
+            <div >
+                <article class="article">
+                    <img src="{{.Image}}" alt="{{.Name}}">
+                    <h2>{{.Name}}</h2>
+                    <p> Members: {{range .Members}}{{.}}, {{end}}</p>
+                    <p>Creation Date: {{.CreationDate}}</p>
+                    <p>First Album: {{.FirstAlbum}}</p>
+                </article>
+            </div>
+                {{end}}
+        </section>
+
+    </main>
+
+    <footer>
+        <nav>
+            <ul>
+                <li>crédit un</li>
+                <li> crédit deux </li>
+                <li> crédit trois </li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+</html>
