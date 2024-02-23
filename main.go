@@ -75,6 +75,8 @@ func main() {
 
 	http.HandleFunc("/search", searchHandle)
 
+	http.HandleFunc("/suggest", suggestHandle)
+
 	// Lance le serveur
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
@@ -271,9 +273,11 @@ func searchHandle(w http.ResponseWriter, r *http.Request) {
 	for _, artist := range DataArtist {
 		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
 			result = append(result, artist)
-			log.Printf("Artiste trouvé : %v\n", artist)
+			/* log.Printf("Artiste trouvé : %v\n", artist) */
 		}
 	}
+
+	/* w.Header().Set("Content-Type", "application/json") */
 
 	// Affichez les résultats dans le modèle HTML
 	tmpl, err := template.ParseFiles(templateHtml)
@@ -289,4 +293,31 @@ func searchHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	return
+}
+
+func suggestHandle(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("query")
+
+	var suggestions []string
+
+	// Récupérez les données de l'API
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
+			suggestions = append(suggestions, artist.Name)
+			fmt.Println()
+		}
+	}
+
+	json.NewEncoder(w).Encode(suggestions)
 }
