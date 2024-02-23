@@ -7,7 +7,7 @@
     <title>groupie tracer</title>
 </head>
 <body>
-        <header>
+        <header>            
             <nav> 
                 <h1>My First Heading</h1>
                 <ul>
@@ -20,16 +20,28 @@
 
     <main>
         <section class="sectionTop" id="searchbar">
-            <form action="/search" method="GET">
-                <input type="text" name="search" placeholder="search artist">
-                <button type="submit">search</button>
-            </form>
+
+            <div class="searchContainer">
+                <form action="/search" method="GET">
+                    <input type="text" name="search" placeholder="search artist" id="searchInput">
+                    <ul id="suggestions"></ul> <!-- liste des suggestion -->
+                    <button type="submit">search</button>
+                </form>
+            </div>
+
+            <div class="searchContainer">
+                <form action="/search" method="GET">
+                    <input type="text" name="search" placeholder="search Members" id="searchInput">
+                    <ul id="suggestions"></ul> <!-- liste des suggestion -->
+                    <button type="submit">search</button>
+                </form>
+            </div>
 
         </section>
 
         <section class="sectionBot">
             {{range .}}
-            <div>
+            <div class="card">
                 <article class="article">
                     <img src="{{.Image}}" alt="{{.Name}}">
                     <h2>{{.Name}}</h2>
@@ -52,5 +64,6 @@
             </ul>
         </nav>
     </footer>
+    <script src="asset/js/script.js"></script>
 </body>
 </html>

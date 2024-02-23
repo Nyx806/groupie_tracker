@@ -49,7 +49,7 @@ nav h1, nav ul {
     padding : 1%;
 }
 
-div {
+.card {
     display: flex;
     background-color : rgb(160, 155, 155);
     flex-wrap: wrap; /* Les divs suivantes seront placées sur la ligne suivante */
@@ -61,6 +61,7 @@ div {
     margin-left: auto;
     margin-right: auto; /* Centrer la div horizontalement */
     box-sizing: border-box; /* Inclure les marges et les bordures dan*/
+    
 }
 
 .article {
@@ -72,7 +73,38 @@ div {
     box-sizing: border-box; /* Inclure les marges et les bordures dans la largeur de l'élément */
 }
 
+.searchContainer {
+    position: relative;
+    width: 300px;
+    margin: 50px auto;
+}
 
+#suggestions {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    position: absolute;
+    max-height: 150px; /* Hauteur maximale des suggestions */
+    overflow-y: auto; /* Activation du défilement vertical si les suggestions dépassent la hauteur maximale */
+    top: 100%; /* Positionner en dessous de la barre de recherche */
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    
+}
+
+#suggestions li {
+    padding: 10px;
+    border-bottom: 1px solid #615858;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    overflow-y: auto;
+}
+
+li:hover {
+    background-color: #f0f0f0;
+}
 
 
 
