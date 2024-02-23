@@ -269,11 +269,23 @@ func searchHandle(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("search")
 
 	var result []InfoArtists
+
+	queryWithoutSpaces := strings.ReplaceAll(query, " ", "")
+
 	// Effectuez la recherche
 	for _, artist := range DataArtist {
+
 		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
 			result = append(result, artist)
 			/* log.Printf("Artiste trouvé : %v\n", artist) */
+		}
+
+		for _, member := range artist.Members {
+			if strings.Contains(strings.ReplaceAll(strings.ToLower(member), " ", ""), strings.ToLower(queryWithoutSpaces)) {
+				result = append(result, artist)
+				log.Printf("menbre trouvé : %v\n", member)
+				log.Printf("données de result : %v\n", result)
+			}
 		}
 	}
 
@@ -317,6 +329,13 @@ func suggestHandle(w http.ResponseWriter, r *http.Request) {
 			suggestions = append(suggestions, artist.Name)
 			fmt.Println()
 		}
+
+		for _, member := range artist.Members {
+			if strings.Contains(strings.ToLower(member), strings.ToLower(query)) {
+				suggestions = append(suggestions, member)
+			}
+		}
+
 	}
 
 	json.NewEncoder(w).Encode(suggestions)

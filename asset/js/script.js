@@ -1,6 +1,7 @@
 // déclaration des variables 
 const searchInput =  document.getElementById('searchInput')
 const suggestion = document.getElementById('suggestions')
+const list = document.getElementById('list')
 
 
 searchInput.addEventListener('input', function() {
@@ -19,8 +20,22 @@ searchInput.addEventListener('input', function() {
             data.forEach(suggestionText => {
                 const suggesEL = document.createElement('li')
                 suggesEL.textContent = suggestionText;
+                suggesEL.id = "list"
                 suggestion.appendChild(suggesEL);
             });
+
+            // Ajoute un gestionnaire d'événements pour chaque suggestion
+            suggestion.querySelectorAll('li').forEach(suggestion => {
+                suggestion.addEventListener('click', function() {
+                    searchInput.value = suggestion.textContent
+                    suggestion.innerHTML = ''
+                })
+            })
+
         })
         .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
+                     
 });
+
+
+
