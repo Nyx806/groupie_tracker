@@ -36,7 +36,14 @@
                     <button type="submit">search</button>
                 </form>
             </div>
-
+            
+            <div class="searchContainer">
+                <form action="/searchCreaDate" method="GET">
+                    <input type="number" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchCreaDate">
+                    <ul id="suggestionsCreaDate" class="suggList"></ul> <!-- liste des suggestion -->
+                    <button type="submit">search</button>
+                </form>
+            </div>
 
         </section>
 
