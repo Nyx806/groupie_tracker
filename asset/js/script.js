@@ -77,12 +77,13 @@ searchInputLoc.addEventListener('input', function() {
                      
 }); 
 
-/* searchCreaDate.addEventListener('input', function() {
+searchCreaDate.addEventListener('input', function() {
     const query = this.value.trim()
     if (query === '') {
         suggestionsCreaDate.innerHTML = ''
         return
     }
+        console.log("voici la query : ",query)
         // Effectue une requête AJAX pour obtenir des suggestions basées sur la requête de recherche
         fetch(`/suggestCreaDate?query=${encodeURIComponent(query)}`)
         .then(response => response.json())
@@ -108,7 +109,7 @@ searchInputLoc.addEventListener('input', function() {
         })
         .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
                      
-}); */
+});
 
 
 

@@ -84,6 +84,8 @@ func main() {
 
 	http.HandleFunc("/searchCreaDate", searchDate)
 
+	http.HandleFunc("/suggestCreaDate", suggestDate)
+
 	// Lance le serveur
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
@@ -498,4 +500,31 @@ func searchDate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	return
+}
+
+func suggestDate(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("query")
+
+	var suggestionDate []string
+
+	// Récupérez les données de l'API
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+		if strings.Contains(strings.ToLower(strconv.Itoa(artist.CreationDate)), strings.ToLower(query)) {
+			suggestionDate = append(suggestionDate, strconv.Itoa(artist.CreationDate))
+			fmt.Println()
+		}
+	}
+
+	json.NewEncoder(w).Encode(suggestionDate)
 }
