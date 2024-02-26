@@ -74,9 +74,18 @@ nav h1, nav ul {
 }
 
 .searchContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
     width: 300px;
     margin: 50px auto;
+    flex-wrap: wrap;
+}
+
+.searchInput {
+    flex: 1; /* Cela permet à l'élément de prendre autant d'espace que possible */
+    /* Ajoutez d'autres styles si nécessaire */
 }
 
 .suggList {
