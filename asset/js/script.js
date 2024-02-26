@@ -10,6 +10,9 @@ const suggestionLoc = document.getElementById('suggestionsLoc')
 const searchCreaDate = document.getElementById('searchCreaDate')
 const suggestionsCreaDate = document.getElementById('suggestionsCreaDate')
 
+const searchFirstAlbum = document.getElementById('searchFirstAlbum')
+const suggestionsFirstAlbum = document.getElementById('suggestionsFirstAlbum')
+
 
 searchInput.addEventListener('input', function() {
     const query = this.value.trim()
@@ -110,6 +113,42 @@ searchCreaDate.addEventListener('input', function() {
         .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
                      
 });
+
+searchFirstAlbum.addEventListener('input', function() {
+    const query = this.value.trim()
+    if (query === '') {
+        suggestionsFirstAlbum.innerHTML = ''
+        return
+    }
+        console.log("voici la query : ",query)
+        // Effectue une requête AJAX pour obtenir des suggestions basées sur la requête de recherche
+        fetch(`/suggestFirstAlbum?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(" voici la data : ",data)
+            
+            suggestionsFirstAlbum.innerHTML = ''
+            data.forEach(suggestionText => {
+                const suggesEL = document.createElement('li')
+                suggesEL.textContent = suggestionText;
+                suggesEL.id = "list"
+                suggestionsFirstAlbum.appendChild(suggesEL);
+            });
+
+            // Ajoute un gestionnaire d'événements pour chaque suggestion
+            suggestionsFirstAlbum.querySelectorAll('li').forEach(suggestionsFirstAlbum => {
+                suggestionsFirstAlbum.addEventListener('click', function() {
+                    searchFirstAlbum.value = suggestion.textContent
+                    suggestionsFirstAlbum.innerHTML = ''
+                })
+            })
+
+        })
+        .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
+                     
+});
+
+
 
 
 

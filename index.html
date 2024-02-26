@@ -45,6 +45,14 @@
                 </form>
             </div>
 
+            <div class="searchContainer">
+                <form action="/searchFirstAlbum" method="GET">
+                    <input type="number" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchFirstAlbum">
+                    <ul id="suggestionsFirstAlbum" class="suggList"></ul> <!-- liste des suggestion -->
+                    <button type="submit">search</button>
+                </form>
+            </div>
+
         </section>
 
         <section class="sectionBot">
