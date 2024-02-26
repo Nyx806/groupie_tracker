@@ -10,15 +10,15 @@ import (
 )
 
 type InfoArtists struct {
-	ID           int      `json:"id"`
-	Image        string   `json:"image"`
-	Name         string   `json:"name"`
-	Members      []string `json:"members"`
-	CreationDate int      `json:"creationDate"`
-	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"`
-	ConcertDates string   `json:"concertDates"`
-	Relations    string   `json:"relations"`
+	ID           int         `json:"id"`
+	Image        string      `json:"image"`
+	Name         string      `json:"name"`
+	Members      []string    `json:"members"`
+	CreationDate int         `json:"creationDate"`
+	FirstAlbum   string      `json:"firstAlbum"`
+	Locations    interface{} `json:"locations"`
+	ConcertDates string      `json:"concertDates"`
+	Relations    string      `json:"relations"`
 }
 
 type InfoLocations struct {
@@ -75,6 +75,8 @@ func main() {
 
 	http.HandleFunc("/search", searchHandle)
 
+	http.HandleFunc("/searchLocation", searchLocation)
+
 	http.HandleFunc("/suggest", suggestHandle)
 
 	// Lance le serveur
@@ -95,6 +97,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
 		return
 	}
+
+	/* fmt.Println("Data Artist:", dataArtist) */ // Affichez les données de l'API debug
 
 	tmpl, err := template.ParseFiles(templateHtml)
 	if err != nil {
@@ -195,6 +199,25 @@ func artistId(apiartist string, index []int) {
 	}
 }
 
+func findArtistId(apiartist string, id []int) (*InfoArtists, error) {
+	artistList, err := takeArtistes(apiartist)
+	if err != nil {
+		return nil, err
+	}
+
+	// Recherche de l'artiste par ID
+	for _, artist := range artistList {
+		var count int
+		if artist.ID == id[count] {
+			return &artist, nil
+		}
+		count++
+	}
+
+	// Retourner une erreur si l'ID n'est pas trouvé
+	return nil, fmt.Errorf("Artiste avec l'ID %d non trouvé", id)
+}
+
 func all(dataAPI *GroupieTracker) {
 	artistList, err := takeArtistes(dataAPI.InfoArtists)
 	if err != nil {
@@ -289,8 +312,6 @@ func searchHandle(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	/* w.Header().Set("Content-Type", "application/json") */
-
 	// Affichez les résultats dans le modèle HTML
 	tmpl, err := template.ParseFiles(templateHtml)
 	if err != nil {
@@ -339,4 +360,58 @@ func suggestHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(suggestions)
+}
+
+func searchLocation(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("search")
+
+	// Récupérez les données de l'API
+	dataLocations, err := takeLocation(API.InfoLocations)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	var artistIDs []int
+
+	fmt.Println("Locations trouvées : ", dataLocations)
+
+	// Effectuez la recherche
+	for _, locations := range dataLocations.Index {
+		for _, loc := range locations.Locations {
+			if strings.Contains(strings.ToLower(loc), strings.ToLower(query)) {
+				artistIDs = append(artistIDs, locations.ID)
+				fmt.Println("Locations trouvées : ", artistIDs)
+			}
+		}
+	}
+
+	var artistInfoLoc []InfoArtists
+
+	for _, id := range artistIDs {
+		artistInfo, err := findArtistId(API.InfoArtists, []int{id})
+		if err != nil {
+			http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+		}
+
+		artistInfoLoc = append(artistInfoLoc, *artistInfo)
+	}
+
+	tmpl, err := template.ParseFiles(templateHtml)
+	if err != nil {
+		http.Error(w, "Erreur lors de la lecture du modèle HTML", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, artistInfoLoc)
+	if err != nil {
+		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
+		return
+	}
+
+	return
 }
