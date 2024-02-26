@@ -39,6 +39,7 @@ searchInput.addEventListener('input', function() {
                 suggestion.addEventListener('click', function() {
                     searchInput.value = suggestion.textContent
                     suggestion.innerHTML = ''
+                    
                 })
             })
 
@@ -70,7 +71,7 @@ searchInputLoc.addEventListener('input', function() {
             // Ajoute un gestionnaire d'événements pour chaque suggestion
             suggestionLoc.querySelectorAll('li').forEach(suggestionLoc => {
                 suggestionLoc.addEventListener('click', function() {
-                    searchInputLoc.value = suggestion.textContent
+                    searchInputLoc.value = suggestionLoc.textContent
                     suggestionLoc.innerHTML = ''
                 })
             })
@@ -104,7 +105,7 @@ searchCreaDate.addEventListener('input', function() {
             // Ajoute un gestionnaire d'événements pour chaque suggestion
             suggestionsCreaDate.querySelectorAll('li').forEach(suggestionsCreaDate => {
                 suggestionsCreaDate.addEventListener('click', function() {
-                    searchCreaDate.value = suggestion.textContent
+                    searchCreaDate.value = suggestionsCreaDate.textContent
                     suggestionsCreaDate.innerHTML = ''
                 })
             })
@@ -138,8 +139,9 @@ searchFirstAlbum.addEventListener('input', function() {
             // Ajoute un gestionnaire d'événements pour chaque suggestion
             suggestionsFirstAlbum.querySelectorAll('li').forEach(suggestionsFirstAlbum => {
                 suggestionsFirstAlbum.addEventListener('click', function() {
-                    searchFirstAlbum.value = suggestion.textContent
+                    searchFirstAlbum.value = suggestionsFirstAlbum.textContent
                     suggestionsFirstAlbum.innerHTML = ''
+                    
                 })
             })
 

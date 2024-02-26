@@ -92,6 +92,7 @@ func main() {
 
 	// Lance le serveur
 	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("Serveur lancé avec succès  sur le port 8080")
 }
 
 var templateHtml = "index.html"
@@ -339,40 +340,6 @@ func searchHandle(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func suggestHandle(w http.ResponseWriter, r *http.Request) {
-	API, err := takeJSON()
-	if err != nil {
-		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	query := r.URL.Query().Get("query")
-
-	var suggestions []string
-
-	// Récupérez les données de l'API
-	DataArtist, err := takeArtistes(API.InfoArtists)
-	if err != nil {
-		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	// Effectuez la recherche
-	for _, artist := range DataArtist {
-		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
-			suggestions = append(suggestions, artist.Name)
-			fmt.Println()
-		}
-
-		for _, member := range artist.Members {
-			if strings.Contains(strings.ToLower(member), strings.ToLower(query)) {
-				suggestions = append(suggestions, member)
-			}
-		}
-
-	}
-
-	json.NewEncoder(w).Encode(suggestions)
-}
-
 func searchLocation(w http.ResponseWriter, r *http.Request) {
 	API, err := takeJSON()
 	if err != nil {
@@ -427,34 +394,6 @@ func searchLocation(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func suggestLocation(w http.ResponseWriter, r *http.Request) {
-	API, err := takeJSON()
-	if err != nil {
-		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	query := r.URL.Query().Get("query")
-
-	var suggestionLoc []string
-
-	// Récupérez les données de l'API
-	DataLoc, err := takeLocation(API.InfoLocations)
-	if err != nil {
-		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	// Effectuez la recherche
-	for _, loc := range DataLoc.Index {
-		for _, location := range loc.Locations {
-			if strings.Contains(strings.ToLower(location), strings.ToLower(query)) {
-				suggestionLoc = append(suggestionLoc, location)
-			}
-		}
-	}
-
-	json.NewEncoder(w).Encode(suggestionLoc)
-}
-
 func searchDate(w http.ResponseWriter, r *http.Request) {
 	// Récupérez les données de l'API
 	API, err := takeJSON()
@@ -496,33 +435,6 @@ func searchDate(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func suggestDate(w http.ResponseWriter, r *http.Request) {
-	API, err := takeJSON()
-	if err != nil {
-		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	query := r.URL.Query().Get("query")
-
-	var suggestionDate []string
-
-	// Récupérez les données de l'API
-	DataArtist, err := takeArtistes(API.InfoArtists)
-	if err != nil {
-		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	// Effectuez la recherche
-	for _, artist := range DataArtist {
-		if strings.Contains(strings.ToLower(strconv.Itoa(artist.CreationDate)), strings.ToLower(query)) {
-			suggestionDate = append(suggestionDate, strconv.Itoa(artist.CreationDate))
-			fmt.Println()
-		}
-	}
-
-	json.NewEncoder(w).Encode(suggestionDate)
-}
-
 func searchFirstAlbum(w http.ResponseWriter, r *http.Request) {
 	// Récupérez les données de l'API
 	API, err := takeJSON()
@@ -562,6 +474,112 @@ func searchFirstAlbum(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func suggestHandle(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("query")
+
+	var suggestions []string
+
+	// Récupérez les données de l'API
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
+			suggestions = append(suggestions, artist.Name+" - groupe")
+		}
+
+		for _, member := range artist.Members {
+			if strings.Contains(strings.ToLower(member), strings.ToLower(query)) {
+				suggestions = append(suggestions, member+" - membre")
+			}
+		}
+
+	}
+
+	if len(suggestions) == 0 {
+		suggestions = append(suggestions, "Aucun résultat trouvé")
+	}
+
+	json.NewEncoder(w).Encode(suggestions)
+}
+
+func suggestLocation(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("query")
+
+	var suggestionLoc []string
+	locations := make(map[string]bool) // Utiliser une map pour stocker les localisations uniques
+
+	// Récupérez les données de l'API
+	DataLoc, err := takeLocation(API.InfoLocations)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Effectuez la recherche
+	for _, loc := range DataLoc.Index {
+		for _, location := range loc.Locations {
+			locationLower := strings.ToLower(location)
+			if strings.Contains(locationLower, strings.ToLower(query)) && !locations[locationLower] {
+				suggestionLoc = append(suggestionLoc, location)
+				locations[locationLower] = true
+			}
+		}
+	}
+
+	if len(suggestionLoc) == 0 {
+		suggestionLoc = append(suggestionLoc, "Aucun résultat trouvé")
+	}
+
+	json.NewEncoder(w).Encode(suggestionLoc)
+}
+
+func suggestDate(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("query")
+
+	var suggestionDate []string
+	dates := make(map[string]bool) // Utiliser une map pour stocker les dates uniques
+
+	// Récupérez les données de l'API
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+
+		datesLower := strings.ToLower(strconv.Itoa(artist.CreationDate))
+		if strings.Contains(datesLower, strings.ToLower(query)) && !dates[datesLower] {
+			suggestionDate = append(suggestionDate, strconv.Itoa(artist.CreationDate))
+			dates[datesLower] = true
+		}
+	}
+
+	if len(suggestionDate) == 0 {
+		suggestionDate = append(suggestionDate, "Aucun résultat trouvé")
+	}
+
+	json.NewEncoder(w).Encode(suggestionDate)
+}
+
 func suggestFirstAlbum(w http.ResponseWriter, r *http.Request) {
 	API, err := takeJSON()
 	if err != nil {
@@ -584,6 +602,10 @@ func suggestFirstAlbum(w http.ResponseWriter, r *http.Request) {
 			suggestionFirstAlbum = append(suggestionFirstAlbum, artist.FirstAlbum)
 			fmt.Println()
 		}
+	}
+
+	if len(suggestionFirstAlbum) == 0 {
+		suggestionFirstAlbum = append(suggestionFirstAlbum, "Aucun résultat trouvé")
 	}
 
 	json.NewEncoder(w).Encode(suggestionFirstAlbum)
