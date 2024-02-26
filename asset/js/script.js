@@ -7,6 +7,9 @@ const list = document.getElementById('list')
 const searchInputLoc = document.getElementById('searchInputLoc')
 const suggestionLoc = document.getElementById('suggestionsLoc')
 
+const searchCreaDate = document.getElementById('searchCreaDate')
+const suggestionsCreaDate = document.getElementById('suggestionsCreaDate')
+
 
 searchInput.addEventListener('input', function() {
     const query = this.value.trim()
@@ -73,6 +76,41 @@ searchInputLoc.addEventListener('input', function() {
         .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
                      
 }); 
+
+/* searchCreaDate.addEventListener('input', function() {
+    const query = this.value.trim()
+    if (query === '') {
+        suggestionsCreaDate.innerHTML = ''
+        return
+    }
+        // Effectue une requête AJAX pour obtenir des suggestions basées sur la requête de recherche
+        fetch(`/suggestCreaDate?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(" voici la data : ",data)
+            
+            suggestionsCreaDate.innerHTML = ''
+            data.forEach(suggestionText => {
+                const suggesEL = document.createElement('li')
+                suggesEL.textContent = suggestionText;
+                suggesEL.id = "list"
+                suggestionsCreaDate.appendChild(suggesEL);
+            });
+
+            // Ajoute un gestionnaire d'événements pour chaque suggestion
+            suggestionsCreaDate.querySelectorAll('li').forEach(suggestionsCreaDate => {
+                suggestionsCreaDate.addEventListener('click', function() {
+                    searchCreaDate.value = suggestion.textContent
+                    suggestionsCreaDate.innerHTML = ''
+                })
+            })
+
+        })
+        .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
+                     
+}); */
+
+
 
 
 
