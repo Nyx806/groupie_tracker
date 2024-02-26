@@ -86,6 +86,10 @@ func main() {
 
 	http.HandleFunc("/suggestCreaDate", suggestDate)
 
+	http.HandleFunc("/searchFirstAlbum", searchFirstAlbum)
+
+	http.HandleFunc("/suggestFirstAlbum", suggestFirstAlbum)
+
 	// Lance le serveur
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
@@ -467,22 +471,12 @@ func searchDate(w http.ResponseWriter, r *http.Request) {
 
 	var result []InfoArtists
 
-	queryWithoutSpaces := strings.ReplaceAll(query, " ", "")
-
 	// Effectuez la recherche
 	for _, artist := range DataArtist {
 
 		if strings.Contains(strings.ToLower(strconv.Itoa(artist.CreationDate)), strings.ToLower(query)) {
 			result = append(result, artist)
 			/* log.Printf("Artiste trouvé : %v\n", artist) */
-		}
-
-		for _, member := range artist.Members {
-			if strings.Contains(strings.ReplaceAll(strings.ToLower(member), " ", ""), strings.ToLower(queryWithoutSpaces)) {
-				result = append(result, artist)
-				log.Printf("menbre trouvé : %v\n", member)
-				log.Printf("données de result : %v\n", result)
-			}
 		}
 	}
 
@@ -527,4 +521,70 @@ func suggestDate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(suggestionDate)
+}
+
+func searchFirstAlbum(w http.ResponseWriter, r *http.Request) {
+	// Récupérez les données de l'API
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+	// Recherchez les artistes dont le nom correspond à la requête
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+	// Récupérez la requête de recherche depuis les paramètres de l'URL
+	query := r.URL.Query().Get("search")
+
+	var result []InfoArtists
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+		if strings.Contains(strings.ToLower(artist.FirstAlbum), strings.ToLower(query)) {
+			result = append(result, artist)
+			/* log.Printf("Artiste trouvé : %v\n", artist) */
+		}
+	}
+
+	// Affichez les résultats dans le modèle HTML
+	tmpl, err := template.ParseFiles(templateHtml)
+	if err != nil {
+		http.Error(w, "Erreur lors de la lecture du modèle HTML", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, result)
+	if err != nil {
+		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
+		return
+	}
+
+	return
+}
+
+func suggestFirstAlbum(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("query")
+
+	var suggestionFirstAlbum []string
+
+	// Récupérez les données de l'API
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+		if strings.Contains(strings.ToLower(artist.FirstAlbum), strings.ToLower(query)) {
+			suggestionFirstAlbum = append(suggestionFirstAlbum, artist.FirstAlbum)
+			fmt.Println()
+		}
+	}
+
+	json.NewEncoder(w).Encode(suggestionFirstAlbum)
 }
