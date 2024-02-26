@@ -79,6 +79,8 @@ func main() {
 
 	http.HandleFunc("/suggest", suggestHandle)
 
+	http.HandleFunc("/suggestLoc", suggestLocation)
+
 	// Lance le serveur
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
@@ -414,4 +416,32 @@ func searchLocation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	return
+}
+
+func suggestLocation(w http.ResponseWriter, r *http.Request) {
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	query := r.URL.Query().Get("query")
+
+	var suggestionLoc []string
+
+	// Récupérez les données de l'API
+	DataLoc, err := takeLocation(API.InfoLocations)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Effectuez la recherche
+	for _, loc := range DataLoc.Index {
+		for _, location := range loc.Locations {
+			if strings.Contains(strings.ToLower(location), strings.ToLower(query)) {
+				suggestionLoc = append(suggestionLoc, location)
+			}
+		}
+	}
+
+	json.NewEncoder(w).Encode(suggestionLoc)
 }

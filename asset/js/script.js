@@ -41,14 +41,14 @@ searchInput.addEventListener('input', function() {
                      
 });
 
-/* searchInputLoc.addEventListener('input', function() {
+searchInputLoc.addEventListener('input', function() {
     const query = this.value.trim()
     if (query === '') {
         suggestionLoc.innerHTML = ''
         return
     }
         // Effectue une requête AJAX pour obtenir des suggestions basées sur la requête de recherche
-        fetch(`/suggest?query=${encodeURIComponent(query)}`)
+        fetch(`/suggestLoc?query=${encodeURIComponent(query)}`)
         .then(response => response.json())
         .then(data => {
             console.log(" voici la data : ",data)
@@ -64,7 +64,7 @@ searchInput.addEventListener('input', function() {
             // Ajoute un gestionnaire d'événements pour chaque suggestion
             suggestionLoc.querySelectorAll('li').forEach(suggestionLoc => {
                 suggestionLoc.addEventListener('click', function() {
-                    searchInputLoc.value = suggestionLoc.textContent
+                    searchInputLoc.value = suggestion.textContent
                     suggestionLoc.innerHTML = ''
                 })
             })
@@ -72,7 +72,7 @@ searchInput.addEventListener('input', function() {
         })
         .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
                      
-}); */
+}); 
 
 
 
