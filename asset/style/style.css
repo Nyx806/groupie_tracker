@@ -79,7 +79,7 @@ nav h1, nav ul {
     margin: 50px auto;
 }
 
-#suggestions {
+.suggList {
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -94,7 +94,7 @@ nav h1, nav ul {
     
 }
 
-#suggestions li {
+.suggList li {
     padding: 10px;
     border-bottom: 1px solid #615858;
     cursor: pointer;
