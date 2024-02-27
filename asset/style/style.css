@@ -30,22 +30,19 @@ nav h1, nav ul {
     padding: 0; 
     position: relative;
     height: calc(50vh - 60px);
-}
-
-.titre{
-    position: absolute;
-    z-index: 1;
+    
 }
 
 .sectionBot{
-    
+    position: relative; /* Assurez-vous que la position est relative */
     -webkit-box-pack: center;
     justify-content: center ;
     -webkit-box-align: center;
     color: white;
     background: rgb(80, 88, 105);
     min-height: calc(50vh - 60px);
-    padding : 1%;
+    padding : 0;
+    width: 100%; /* Ajustez la largeur à 100% */
 }
 
 .card {
@@ -80,11 +77,6 @@ nav h1, nav ul {
     width: 300px;
     margin: 50px auto;
     flex-wrap: wrap;
-}
-
-.searchInput {
-    flex: 1; /* Cela permet à l'élément de prendre autant d'espace que possible */
-    /* Ajoutez d'autres styles si nécessaire */
 }
 
 .suggList {
@@ -135,7 +127,8 @@ li:hover {
 
 .filter-container {
     text-align: right;
-    position: fixed;
+    margin-bottom: 10px;
+    margin-left: auto; /* Utilisez margin-left:auto pour déplacer le container vers la droite */
     top: 0;
     right: 0;
     padding: 10px;
@@ -149,6 +142,7 @@ li:hover {
     border: 2px solid #ddd;
     border-radius: 5px;
     margin-top: 10px;
+    position: absolute;
 }
 
 .filter-option {
@@ -162,7 +156,7 @@ li:hover {
 }
 
 /* Style pour les checkboxes */
-input[type="checkbox"] {
+ input[type="checkbox"] {
     margin-right: 3px;
 }
 
@@ -191,3 +185,4 @@ input[type="checkbox"]:checked + label {
 }
 
 
+ 

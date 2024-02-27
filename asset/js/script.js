@@ -18,11 +18,15 @@
     /* variable pour la recherche des premier album */
     const searchFirstAlbum = document.getElementById('searchFirstAlbum')
     const suggestionsFirstAlbum = document.getElementById('suggestionsFirstAlbum')
+    
+    document.querySelector('.toggle-button').addEventListener('click', toggleFilters);
 
     function toggleFilters() {
         var filterMenu = document.getElementById('filterMenu');
         filterMenu.classList.toggle('show-filters');
+        console.log(" click du bouton filtre ");
     }
+
 
     // permet de pouvoir selectionner les suggestion et de les coller dans le champ de recherche
     function handleSuggestionClick(suggestion) {
