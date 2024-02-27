@@ -50,7 +50,7 @@ nav h1, nav ul {
     background-color : rgb(160, 155, 155);
     flex-wrap: wrap; /* Les divs suivantes seront placées sur la ligne suivante */
     justify-content: space-between; /* Les divs suivantes seront espacées de manière égale sur la ligne */
-    margin-top: 3%;
+    margin-top: 10%;
     border: hidden;
     border-radius: 10px;
     width: 30%; /* Limiter la largeur à 80% de la largeur de la fenêtre */
@@ -142,7 +142,11 @@ li:hover {
     border: 2px solid #ddd;
     border-radius: 5px;
     margin-top: 10px;
+    margin-left: auto;
     position: absolute;
+    right: 0;
+    max-width: 300px; /* Ajustez la largeur maximale selon vos besoins */
+
 }
 
 .filter-option {
