@@ -625,6 +625,13 @@ func filter(w http.ResponseWriter, r *http.Request) {
 	filterCheck5 := r.URL.Query().Get("check5")
 	filterCheck6 := r.URL.Query().Get("check6")
 	filterCheck7 := r.URL.Query().Get("check7")
+	filterPlage := r.URL.Query().Get("filterPlage")
+
+	//convertir la plage en int
+	filterPlageInt, err := strconv.Atoi(filterPlage)
+	if err != nil {
+		http.Error(w, "Erreur lors de la conversion de la plage", http.StatusInternalServerError)
+	}
 
 	API, err := takeJSON()
 	if err != nil {
@@ -661,6 +668,11 @@ func filter(w http.ResponseWriter, r *http.Request) {
 		}
 		if filterCheck7 == "true" && len(artist.Members) == 7 {
 			filterResult = append(filterResult, artist)
+		}
+		if filterPlageInt != 1956 {
+			if filterPlageInt >= artist.CreationDate {
+				filterResult = append(filterResult, artist)
+			}
 		}
 	}
 
