@@ -19,6 +19,10 @@ const suggestionsCreaDate = document.getElementById('suggestionsCreaDate')
 const searchFirstAlbum = document.getElementById('searchFirstAlbum')
 const suggestionsFirstAlbum = document.getElementById('suggestionsFirstAlbum')
 
+function toggleFilters() {
+    var filterMenu = document.getElementById('filterMenu');
+    filterMenu.classList.toggle('show-filters');
+}
 
 
 /* evenement pour la recherche des groupes et des membres  */

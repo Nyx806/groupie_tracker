@@ -133,4 +133,61 @@ li:hover {
     width: auto; /* ou une autre valeur selon vos besoins */
 }
 
+.filter-container {
+    text-align: right;
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 10px;
+}
+
+.filter-menu {
+    display: none;
+    flex-direction: column;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.filter-option {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 5px;
+}
+
+.filter-option label {
+    margin-right: 5px;
+}
+
+/* Style pour les checkboxes */
+input[type="checkbox"] {
+    margin-right: 3px;
+}
+
+/* Style pour les checkboxes cochées */
+input[type="checkbox"]:checked + label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Style pour le bouton de toggle du menu */
+.toggle-button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.toggle-button:hover {
+    background-color: #45a049;
+}
+
+.filter-menu.show-filters {
+    display: block;
+}
+
 
