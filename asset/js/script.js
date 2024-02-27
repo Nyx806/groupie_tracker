@@ -1,19 +1,27 @@
 // déclaration des variables 
+
+/* variable ded recherche des groupe ou des membres */
 const searchInput =  document.getElementById('searchInput')
 const suggestion = document.getElementById('suggestions')
 
+/* variable pour les liste de suggestion  */
 const list = document.getElementById('list')
 
+/* variable pour la recherche des localisation */
 const searchInputLoc = document.getElementById('searchInputLoc')
 const suggestionLoc = document.getElementById('suggestionsLoc')
 
+/* variable pour la recherche des date de creation */
 const searchCreaDate = document.getElementById('searchCreaDate')
 const suggestionsCreaDate = document.getElementById('suggestionsCreaDate')
 
+/* variable pour la recherche des premier album */
 const searchFirstAlbum = document.getElementById('searchFirstAlbum')
 const suggestionsFirstAlbum = document.getElementById('suggestionsFirstAlbum')
 
 
+
+/* evenement pour la recherche des groupes et des membres  */
 searchInput.addEventListener('input', function() {
     const query = this.value.trim()
     if (query === '') {
@@ -48,6 +56,7 @@ searchInput.addEventListener('input', function() {
                      
 });
 
+/* evenement pour la recherche des localisation  */
 searchInputLoc.addEventListener('input', function() {
     const query = this.value.trim()
     if (query === '') {
@@ -81,6 +90,8 @@ searchInputLoc.addEventListener('input', function() {
                      
 }); 
 
+
+/* evenement pour la recherche de la date de création  */
 searchCreaDate.addEventListener('input', function() {
     const query = this.value.trim()
     if (query === '') {
@@ -114,6 +125,8 @@ searchCreaDate.addEventListener('input', function() {
         .catch(error => console.error('Erreur lors de la récupération des suggestions:', error));
                      
 });
+
+/* evenement pour la recherche du premier album  */
 
 searchFirstAlbum.addEventListener('input', function() {
     const query = this.value.trim()

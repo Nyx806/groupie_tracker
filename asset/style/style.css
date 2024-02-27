@@ -27,10 +27,9 @@ nav h1, nav ul {
     justify-content: center;
     -webkit-box-align: center;
     align-items: center;
-    height: calc(50vh - 60px);
-    text-align: center;
-    position: relative;
     padding: 0; 
+    position: relative;
+    height: calc(50vh - 60px);
 }
 
 .titre{
@@ -115,6 +114,23 @@ li:hover {
     background-color: #f0f0f0;
 }
 
+.searchInterface {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 50%;
+}
 
+.searchInterface > * {
+    margin: 0; /* Réinitialiser les marges si nécessaire */
+}
+
+.searchInterface > * {
+    width: auto; /* ou une autre valeur selon vos besoins */
+}
 
 

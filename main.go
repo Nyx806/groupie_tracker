@@ -90,6 +90,8 @@ func main() {
 
 	http.HandleFunc("/suggestFirstAlbum", suggestFirstAlbum)
 
+	http.HandleFunc("/filter", filter)
+
 	// Lance le serveur
 	log.Fatal(http.ListenAndServe(":8080", nil))
 	fmt.Println("Serveur lancé avec succès  sur le port 8080")
@@ -609,4 +611,71 @@ func suggestFirstAlbum(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(suggestionFirstAlbum)
+}
+
+/* partie filtre */
+
+func filter(w http.ResponseWriter, r *http.Request) {
+
+	// recuperation des valeur des checkbox
+	filterCheck1 := r.URL.Query().Get("check1")
+	filterCheck2 := r.URL.Query().Get("check2")
+	filterCheck3 := r.URL.Query().Get("check3")
+	filterCheck4 := r.URL.Query().Get("check4")
+	filterCheck5 := r.URL.Query().Get("check5")
+	filterCheck6 := r.URL.Query().Get("check6")
+	filterCheck7 := r.URL.Query().Get("check7")
+
+	API, err := takeJSON()
+	if err != nil {
+		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	// Récupérez les données de l'API
+	DataArtist, err := takeArtistes(API.InfoArtists)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
+	}
+
+	var filterResult []InfoArtists
+
+	// Effectuez la recherche
+	for _, artist := range DataArtist {
+		if filterCheck1 == "true" && len(artist.Members) == 1 {
+			filterResult = append(filterResult, artist)
+		}
+		if filterCheck2 == "true" && len(artist.Members) == 2 {
+			filterResult = append(filterResult, artist)
+		}
+		if filterCheck3 == "true" && len(artist.Members) == 3 {
+			filterResult = append(filterResult, artist)
+		}
+		if filterCheck4 == "true" && len(artist.Members) == 4 {
+			filterResult = append(filterResult, artist)
+		}
+		if filterCheck5 == "true" && len(artist.Members) == 5 {
+			filterResult = append(filterResult, artist)
+		}
+		if filterCheck6 == "true" && len(artist.Members) == 6 {
+			filterResult = append(filterResult, artist)
+		}
+		if filterCheck7 == "true" && len(artist.Members) == 7 {
+			filterResult = append(filterResult, artist)
+		}
+	}
+
+	// Affichez les résultats dans le modèle HTML
+	tmpl, err := template.ParseFiles(templateHtml)
+	if err != nil {
+		http.Error(w, "Erreur lors de la lecture du modèle HTML", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, filterResult)
+	if err != nil {
+		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
+		return
+	}
+
+	return
 }
