@@ -13,24 +13,73 @@
                     <button class="toggle-button" onclick="toggleFilters()">Afficher/Masquer Filtres</button>
                         <div class="filter-menu" id="filterMenu">
                             <form action="/filter">
-                                <input type="radio" name="check1" value="true">
-                                <label for="check1">1</label>
-                                <input type="radio" name="check2" value="true ">
-                                <label for="check2">2</label>
-                                <input type="radio" name="check3" value="true">
-                                <label for="check3">3</label>
-                                <input type="radio" name="check4" value="true">
-                                <label for="check4">4</label>
-                                <input type="radio" name="check5" value="true">
-                                <label for="check5">5</label>
-                                <input type="radio" name="check6" value="true">
-                                <label for="check6">6</label>
-                                <input type="radio" name="check7" value="true">
-                                <label for="check7">7</label>
-                                <input type="range" name="filterPlage" min="1956" max="2020">
-                                <label for="filterPlage"> dates</label>
+                                <div class="filter-option">
+                                    <input type="radio" name="check1" value="true">
+                                    <label for="check1">1</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="radio" name="check2" value="true">
+                                    <label for="check2">2</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="radio" name="check3" value="true">
+                                    <label for="check3">3</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="radio" name="check4" value="true">
+                                    <label for="check4">4</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="radio" name="check5" value="true">
+                                    <label for="check5">5</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="radio" name="check6" value="true">
+                                    <label for="check6">6</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="radio" name="check7" value="true">
+                                    <label for="check7">7</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="range" name="filterPlage" min="1956" max="2020">
+                                    <label for="filterPlage"> dates</label>
+                                </div>
+
                                 <input type="submit" value="filter">
+                                
                             </form>   
+
+                            <div class="searchContainer">
+                                <form action="/searchLocation" method="GET">
+                                    <input type="text" name="search" placeholder="location" id="searchInputLoc">
+                                    <ul id="suggestionsLoc" class="suggList"></ul> <!-- liste des suggestion -->
+                                    <button type="submit">search</button>
+                                </form>
+                            </div>
+                            
+                            <div class="searchContainer">
+                                <form action="/searchCreaDate" method="GET">
+                                    <input type="number" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchCreaDate">
+                                    <ul id="suggestionsCreaDate" class="suggList"></ul> <!-- liste des suggestion -->
+                                    <button type="submit">search</button>
+                                </form>
+                            </div>
+                        
+            
+                            <div class="searchContainer">
+                                <form action="/searchFirstAlbum" method="GET">
+                                    <input type="text" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchFirstAlbum">
+                                    <ul id="suggestionsFirstAlbum" class="suggList"></ul> <!-- liste des suggestion -->
+                                    <button type="submit">search</button>
+                                </form>
+                            </div>
                     </div>
                 </div>       
             </nav>
@@ -47,29 +96,7 @@
                     </form>
                 </div>
 
-                <div class="searchContainer">
-                    <form action="/searchLocation" method="GET">
-                        <input type="text" name="search" placeholder="location" id="searchInputLoc">
-                        <ul id="suggestionsLoc" class="suggList"></ul> <!-- liste des suggestion -->
-                        <button type="submit">search</button>
-                    </form>
-                </div>
                 
-                <div class="searchContainer">
-                    <form action="/searchCreaDate" method="GET">
-                        <input type="number" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchCreaDate">
-                        <ul id="suggestionsCreaDate" class="suggList"></ul> <!-- liste des suggestion -->
-                        <button type="submit">search</button>
-                    </form>
-                </div>
-            
-
-                <div class="searchContainer">
-                    <form action="/searchFirstAlbum" method="GET">
-                        <input type="text" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchFirstAlbum">
-                        <ul id="suggestionsFirstAlbum" class="suggList"></ul> <!-- liste des suggestion -->
-                        <button type="submit">search</button>
-                    </form>
                 </div>
             </div>
         </section>
