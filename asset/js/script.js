@@ -24,20 +24,25 @@
     function toggleFilters() {
         var filterMenu = document.getElementById('filterMenu');
         filterMenu.classList.toggle('show-filters');
-        console.log(" click du bouton filtre ");
+        
+    }
+
+    function updateFilterPlageValue(value) {
+        document.getElementById('filterPlageValue').innerText = value;
     }
 
 
     // permet de pouvoir selectionner les suggestion et de les coller dans le champ de recherche
-    function handleSuggestionClick(suggestion) {
+    function handleSuggestionClick(suggestion,valInput) {
         // Divisez la suggestion en deux parties : le nom de l'artiste et le suffixe "-"
         var parts = suggestion.split(' - ');
         // Récupérez le nom de l'artiste
         var artistName = parts[0];
         // Collez le nom de l'artiste dans le champ de recherche
-        document.getElementById('searchInput').value = artistName;
-    }
+        valInput.value = artistName;
+        // Effectuez une recherche dans la base de données pour obtenir des informations sur l'artiste
 
+    }
 
     /* evenement pour la recherche des groupes et des membres  */
     searchInput.addEventListener('input', function() {
@@ -63,7 +68,7 @@
                 // Ajoute un gestionnaire d'événements pour chaque suggestion
                 suggestion.querySelectorAll('li').forEach(suggestion => {
                     suggestion.addEventListener('click', function() {
-                        handleSuggestionClick(suggestion.textContent)
+                        handleSuggestionClick(suggestion.textContent,searchInput)
                         hideSuggestions(); 
                         
                     })
@@ -100,10 +105,8 @@
                 // Ajoute un gestionnaire d'événements pour chaque suggestion
                 suggestionLoc.querySelectorAll('li').forEach(suggestionLoc => {
                     suggestionLoc.addEventListener('click', function() {
-                        handleSuggestionClick(suggestionLoc.textContent)
+                        handleSuggestionClick(suggestionLoc.textContent,searchInputLoc)
                         hideSuggestions(); 
-                        /* searchInputLoc.value = suggestionLoc.textContent
-                        suggestionLoc.innerHTML = '' */
                     })
                 })
 
@@ -122,7 +125,7 @@
         }
             console.log("voici la query : ",query)
             // Effectue une requête AJAX pour obtenir des suggestions basées sur la requête de recherche
-            fetch(`/suggestCreaDate?query=${encodeURIComponent(query)}`)
+            fetch(`/suggestDate?query=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
                 console.log(" voici la data : ",data)
@@ -138,12 +141,8 @@
                 // Ajoute un gestionnaire d'événements pour chaque suggestion
                 suggestionsCreaDate.querySelectorAll('li').forEach(suggestionsCreaDate => {
                     suggestionsCreaDate.addEventListener('click', function() {
-
-                        handleSuggestionClick(suggestionsCreaDate.textContent)
+                        handleSuggestionClick(suggestionsCreaDate.textContent,searchCreaDate)
                         hideSuggestions();
-
-                        /* searchCreaDate.value = suggestionsCreaDate.textContent
-                        suggestionsCreaDate.innerHTML = '' */
                     })
                 })
 
@@ -179,11 +178,9 @@
                 suggestionsFirstAlbum.querySelectorAll('li').forEach(suggestionsFirstAlbum => {
                     suggestionsFirstAlbum.addEventListener('click', function() {
 
-                        handleSuggestionClick(suggestionsFirstAlbum.textContent)
+                        handleSuggestionClick(suggestionsFirstAlbum.textContent,searchFirstAlbum)
+                        
                         hideSuggestions();
-
-                        searchFirstAlbum.value = suggestionsFirstAlbum.textContent
-                        suggestionsFirstAlbum.innerHTML = ''
                         
                     })
                 })

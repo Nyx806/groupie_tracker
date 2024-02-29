@@ -76,19 +76,13 @@ func main() {
 
 	http.HandleFunc("/search", searchHandle)
 
-	http.HandleFunc("/searchLocation", searchLocation)
-
 	http.HandleFunc("/suggest", suggestHandle)
 
 	http.HandleFunc("/suggestLoc", suggestLocation)
 
-	http.HandleFunc("/searchCreaDate", searchDate)
-
-	http.HandleFunc("/suggestCreaDate", suggestDate)
-
-	http.HandleFunc("/searchFirstAlbum", searchFirstAlbum)
-
 	http.HandleFunc("/suggestFirstAlbum", suggestFirstAlbum)
+
+	http.HandleFunc("/suggestDate", suggestDate)
 
 	http.HandleFunc("/filter", filter)
 
@@ -324,140 +318,7 @@ func searchHandle(w http.ResponseWriter, r *http.Request) {
 				log.Printf("données de result : %v\n", result)
 			}
 		}
-	}
 
-	// Affichez les résultats dans le modèle HTML
-	tmpl, err := template.ParseFiles(templateHtml)
-	if err != nil {
-		http.Error(w, "Erreur lors de la lecture du modèle HTML", http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, result)
-	if err != nil {
-		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
-		return
-	}
-
-	return
-}
-
-func searchLocation(w http.ResponseWriter, r *http.Request) {
-	API, err := takeJSON()
-	if err != nil {
-		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	query := r.URL.Query().Get("search")
-
-	// Récupérez les données de l'API
-	dataLocations, err := takeLocation(API.InfoLocations)
-	if err != nil {
-		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-
-	var artistIDs []int
-
-	fmt.Println("Locations trouvées : ", dataLocations)
-
-	// Effectuez la recherche
-	for _, locations := range dataLocations.Index {
-		for _, loc := range locations.Locations {
-			if strings.Contains(strings.ToLower(loc), strings.ToLower(query)) {
-				artistIDs = append(artistIDs, locations.ID)
-				fmt.Println("Locations trouvées : ", artistIDs)
-			}
-		}
-	}
-
-	var artistInfoLoc []InfoArtists
-
-	for _, id := range artistIDs {
-		artistInfo, err := findArtistId(API.InfoArtists, []int{id})
-		if err != nil {
-			http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-		}
-
-		artistInfoLoc = append(artistInfoLoc, *artistInfo)
-	}
-
-	tmpl, err := template.ParseFiles(templateHtml)
-	if err != nil {
-		http.Error(w, "Erreur lors de la lecture du modèle HTML", http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, artistInfoLoc)
-	if err != nil {
-		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
-		return
-	}
-
-	return
-}
-
-func searchDate(w http.ResponseWriter, r *http.Request) {
-	// Récupérez les données de l'API
-	API, err := takeJSON()
-	if err != nil {
-		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-	// Recherchez les artistes dont le nom correspond à la requête
-	DataArtist, err := takeArtistes(API.InfoArtists)
-	if err != nil {
-		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-	// Récupérez la requête de recherche depuis les paramètres de l'URL
-	query := r.URL.Query().Get("search")
-
-	var result []InfoArtists
-
-	// Effectuez la recherche
-	for _, artist := range DataArtist {
-
-		if strings.Contains(strings.ToLower(strconv.Itoa(artist.CreationDate)), strings.ToLower(query)) {
-			result = append(result, artist)
-			/* log.Printf("Artiste trouvé : %v\n", artist) */
-		}
-	}
-
-	// Affichez les résultats dans le modèle HTML
-	tmpl, err := template.ParseFiles(templateHtml)
-	if err != nil {
-		http.Error(w, "Erreur lors de la lecture du modèle HTML", http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, result)
-	if err != nil {
-		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
-		return
-	}
-
-	return
-}
-
-func searchFirstAlbum(w http.ResponseWriter, r *http.Request) {
-	// Récupérez les données de l'API
-	API, err := takeJSON()
-	if err != nil {
-		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-	// Recherchez les artistes dont le nom correspond à la requête
-	DataArtist, err := takeArtistes(API.InfoArtists)
-	if err != nil {
-		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
-	}
-	// Récupérez la requête de recherche depuis les paramètres de l'URL
-	query := r.URL.Query().Get("search")
-
-	var result []InfoArtists
-	// Effectuez la recherche
-	for _, artist := range DataArtist {
-		if strings.Contains(strings.ToLower(artist.FirstAlbum), strings.ToLower(query)) {
-			result = append(result, artist)
-			/* log.Printf("Artiste trouvé : %v\n", artist) */
-		}
 	}
 
 	// Affichez les résultats dans le modèle HTML
@@ -617,22 +478,6 @@ func suggestFirstAlbum(w http.ResponseWriter, r *http.Request) {
 
 func filter(w http.ResponseWriter, r *http.Request) {
 
-	// recuperation des valeur des checkbox
-	filterCheck1 := r.URL.Query().Get("check1")
-	filterCheck2 := r.URL.Query().Get("check2")
-	filterCheck3 := r.URL.Query().Get("check3")
-	filterCheck4 := r.URL.Query().Get("check4")
-	filterCheck5 := r.URL.Query().Get("check5")
-	filterCheck6 := r.URL.Query().Get("check6")
-	filterCheck7 := r.URL.Query().Get("check7")
-	filterPlage := r.URL.Query().Get("filterPlage")
-
-	//convertir la plage en int
-	filterPlageInt, err := strconv.Atoi(filterPlage)
-	if err != nil {
-		http.Error(w, "Erreur lors de la conversion de la plage", http.StatusInternalServerError)
-	}
-
 	API, err := takeJSON()
 	if err != nil {
 		log.Print("Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
@@ -644,36 +489,61 @@ func filter(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erreur lors de la récupération des données depuis l'API", http.StatusInternalServerError)
 	}
 
-	var filterResult []InfoArtists
+	// Récupérez les données de l'API
+
+	// Récupérez les paramètres de l'URL
+
+	check := r.URL.Query().Get("check")
+	filterPlage := r.URL.Query().Get("filterPlage")
+	location := r.URL.Query().Get("location")
+	creaDate := r.URL.Query().Get("creaDate")
+	firstAlbum := r.URL.Query().Get("FirstAlbum")
+
+	//
+
+	filterPlageInt, err := strconv.Atoi(filterPlage)
+	if err != nil {
+		http.Error(w, "Erreur lors de la conversion de la plage de dates", http.StatusInternalServerError)
+		return
+	}
+
+	var result []InfoArtists
 
 	// Effectuez la recherche
+
 	for _, artist := range DataArtist {
-		if filterCheck1 == "true" && len(artist.Members) == 1 {
-			filterResult = append(filterResult, artist)
-		}
-		if filterCheck2 == "true" && len(artist.Members) == 2 {
-			filterResult = append(filterResult, artist)
-		}
-		if filterCheck3 == "true" && len(artist.Members) == 3 {
-			filterResult = append(filterResult, artist)
-		}
-		if filterCheck4 == "true" && len(artist.Members) == 4 {
-			filterResult = append(filterResult, artist)
-		}
-		if filterCheck5 == "true" && len(artist.Members) == 5 {
-			filterResult = append(filterResult, artist)
-		}
-		if filterCheck6 == "true" && len(artist.Members) == 6 {
-			filterResult = append(filterResult, artist)
-		}
-		if filterCheck7 == "true" && len(artist.Members) == 7 {
-			filterResult = append(filterResult, artist)
-		}
-		if filterPlageInt != 1956 {
-			if filterPlageInt >= artist.CreationDate {
-				filterResult = append(filterResult, artist)
+
+		var numMembers int
+
+		numMembers = len(artist.Members)
+
+		if check != "" {
+			if check == "1" && numMembers == 1 {
+				result = append(result, artist)
+				fmt.Println("check1 result", artist)
+			} else if check == "2" && numMembers == 2 {
+				result = append(result, artist)
+				fmt.Println("check2 result", artist)
+			} else if check == "3" && numMembers == 3 {
+				result = append(result, artist)
+				fmt.Println("check3 result", artist)
+			} else if check == "4" && numMembers == 4 {
+				result = append(result, artist)
+				fmt.Println("check4 result", artist)
+			} else if check == "5" && numMembers == 5 {
+				result = append(result, artist)
+				fmt.Println("check5 result", artist)
+			} else if check == "6" && numMembers == 6 {
+				result = append(result, artist)
+				fmt.Println("check6 result", artist)
+			} else if check == "7" && numMembers == 7 {
+				result = append(result, artist)
+				fmt.Println("check7 result", artist)
 			}
+		} else {
+			result = allFilter(artist, result, artist.CreationDate, filterPlageInt, location, firstAlbum, creaDate, filterPlageInt, API)
 		}
+
 	}
 
 	// Affichez les résultats dans le modèle HTML
@@ -683,11 +553,100 @@ func filter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.Execute(w, filterResult)
+	err = tmpl.Execute(w, result)
 	if err != nil {
 		http.Error(w, "Erreur lors de l'exécution du modèle", http.StatusInternalServerError)
 		return
 	}
 
 	return
+}
+
+func filtreDate(artist InfoArtists, result []InfoArtists, date int, plage int) []InfoArtists {
+	if plage != 1958 {
+		if date <= plage {
+			result = append(result, artist)
+			return result
+		}
+	}
+	return result
+}
+
+func filterLocation(artist InfoArtists, result []InfoArtists, location string, API *GroupieTracker) []InfoArtists {
+
+	fmt.Println("location : ", location)
+
+	if location != "" {
+		// Récupérez les données de l'API
+		dataLocations, err := takeLocation(API.InfoLocations)
+		if err != nil {
+			return nil
+		}
+
+		var artistIDs []int
+
+		fmt.Println("Locations trouvées : ", dataLocations)
+
+		// Effectuez la recherche
+		for _, locations := range dataLocations.Index {
+			for _, loc := range locations.Locations {
+				if strings.Contains(strings.ToLower(loc), strings.ToLower(location)) {
+					artistIDs = append(artistIDs, locations.ID)
+					fmt.Println("Locations trouvées : ", artistIDs)
+				}
+			}
+		}
+
+		var artistInfoLoc []InfoArtists
+
+		for _, id := range artistIDs {
+			artistInfo, err := findArtistId(API.InfoArtists, []int{id})
+			if err != nil {
+				return nil
+			}
+
+			artistInfoLoc = append(artistInfoLoc, *artistInfo)
+		}
+
+		return artistInfoLoc
+	}
+	return result
+}
+
+func filterFirstAlbum(artist InfoArtists, result []InfoArtists, firstAlbum string) []InfoArtists {
+	if firstAlbum != "" {
+		if strings.Contains(strings.ToLower(artist.FirstAlbum), strings.ToLower(firstAlbum)) {
+			result = append(result, artist)
+			return result
+		}
+	}
+	return result
+}
+
+func filterCreaDate(artist InfoArtists, result []InfoArtists, date string) []InfoArtists {
+	if date != "" {
+		if date == strconv.Itoa(artist.CreationDate) {
+			result = append(result, artist)
+			return result
+		}
+	}
+	return result
+}
+
+func allFilter(artist InfoArtists, result []InfoArtists, date int, plage int, location string, firstAlbum string, creaDate string, filterPlageInt int, API *GroupieTracker) []InfoArtists {
+
+	fmt.Println("filtre date")
+	result = filtreDate(artist, result, artist.CreationDate, filterPlageInt)
+
+	fmt.Println("filtre location")
+	result = filterLocation(artist, result, location, API)
+	fmt.Println("result location : ")
+	fmt.Println(result)
+
+	fmt.Println("filtre first album")
+	result = filterFirstAlbum(artist, result, firstAlbum)
+
+	fmt.Println("filtre creaDate")
+	result = filterCreaDate(artist, result, creaDate)
+	return result
 }
