@@ -8,92 +8,106 @@
 </head>
 <body>
         <header>            
-            
+           
         </header>
 
     <main>
-        <nav>                 
+        <nav>     
+                        
             <div class="filter-container">
               <button class="toggle-button" >Afficher/Masquer Filtres</button>
                   <div class="filter-menu" id="filterMenu">
                       <form action="/filter">
-                          <div class="filter-option">
-                              <input type="radio" name="check1" value="true">
-                              <label for="check1">1</label>
-                          </div>
+                        <fieldset>
+                            <legend>Filter by members</legend>
+                            <div class="filter-option">
+                                <input type="radio" name="check" value="1">
+                                <label for="check">1</label>
+                            </div>
 
-                          <div class="filter-option">
-                              <input type="radio" name="check2" value="true">
-                              <label for="check2">2</label>
-                          </div>
+                            <div class="filter-option">
+                                <input type="radio" name="check" value="2">
+                                <label for="check">2</label>
+                            </div>
 
-                          <div class="filter-option">
-                              <input type="radio" name="check3" value="true">
-                              <label for="check3">3</label>
-                          </div>
+                            <div class="filter-option">
+                                <input type="radio" name="check" value="3">
+                                <label for="check">3</label>
+                            </div>
 
-                          <div class="filter-option">
-                              <input type="radio" name="check4" value="true">
-                              <label for="check4">4</label>
-                          </div>
+                            <div class="filter-option">
+                                <input type="radio" name="check" value="4">
+                                <label for="check">4</label>
+                            </div>
 
-                          <div class="filter-option">
-                              <input type="radio" name="check5" value="true">
-                              <label for="check5">5</label>
-                          </div>
+                            <div class="filter-option">
+                                <input type="radio" name="check" value="5">
+                                <label for="check">5</label>
+                            </div>
 
-                          <div class="filter-option">
-                              <input type="radio" name="check6" value="true">
-                              <label for="check6">6</label>
-                          </div>
+                            <div class="filter-option">
+                                <input type="radio" name="check" value="6">
+                                <label for="check">6</label>
+                            </div>
 
-                          <div class="filter-option">
-                              <input type="radio" name="check7" value="true">
-                              <label for="check7">7</label>
-                          </div>
-                          <div class="filter-option">
-                              <input type="range" name="filterPlage" min="1956" max="2020">
-                              <label for="filterPlage"> dates</label>
-                          </div>
+                            <div class="filter-option">
+                                <input type="radio" name="check" value="7">
+                                <label for="check">7</label>
+                            </div>
+
+                        </fieldset>  
+
+                        <fieldset>
+                            <legend>Filter by Creation Date</legend>
+                            <div class="filter-option">
+                                <input type="range" name="filterPlage" min="1956" max="2020" value="1958" oninput="updateFilterPlageValue(this.value)">
+                                <label for="filterPlage"><span id="filterPlageValue">1956</span></label>
+                            </div>
+                        </fieldset>
+                         
+                        <fieldset>                           
+                            <legend>Filter by location</legend>
+                            <div class="searchContainer">
+                                <input type="text" name="location" placeholder="location" id="searchInputLoc">
+                                <ul id="suggestionsLoc" class="suggList1"></ul> <!-- liste des suggestion -->
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Filter by Creation Date </legend>
+                            <p> select the specific year</p>
+                            <div class="searchContainer">
+                                <input type="number" name="creaDate" min="1900" max="2100" placeholder="CreationDate" id="searchCreaDate">
+                                <ul id="suggestionsCreaDate" class="suggList2"></ul> <!-- liste des suggestion -->
+                            </div>
+                        </fieldset>
+                        
+                        <fieldset>
+                            <legend>Filter by First Album</legend>
+                            <div class="searchContainer">
+                                <input type="text" name="FirstAlbum" min="1900" max="2100" placeholder="firstAlbum" id="searchFirstAlbum">
+                                <ul id="suggestionsFirstAlbum" class="suggList3"></ul> <!-- liste des suggestion -->
+                            </div>
+                        </fieldset>
 
                           <input type="submit" value="filter">
                       </form>   
 
-                      <div class="searchContainer">
-                          <form action="/searchLocation" method="GET">
-                              <input type="text" name="search" placeholder="location" id="searchInputLoc">
-                              <ul id="suggestionsLoc" class="suggList"></ul> <!-- liste des suggestion -->
-                              <button type="submit">search</button>
-                          </form>
-                      </div>
-                      
-                      <div class="searchContainer">
-                          <form action="/searchCreaDate" method="GET">
-                              <input type="number" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchCreaDate">
-                              <ul id="suggestionsCreaDate" class="suggList"></ul> <!-- liste des suggestion -->
-                              <button type="submit">search</button>
-                          </form>
-                      </div>
-                  
-      
-                      <div class="searchContainer">
-                          <form action="/searchFirstAlbum" method="GET">
-                              <input type="text" name="search" min="1900" max="2100" placeholder="CreationDate" id="searchFirstAlbum">
-                              <ul id="suggestionsFirstAlbum" class="suggList"></ul> <!-- liste des suggestion -->
-                              <button type="submit">search</button>
-                          </form>
-                      </div>
+                     
               </div>
           </div>       
         </nav>
 
         <section class="sectionTop" id="searchbar">
+            <div class="container">
+                <div class="title"> GROUPIE TRACKER</div>
+            </div>
             <div class="searchInterface">
-                <div class="searchContainer">
+                <div class="searchContainerBis">
                     <form action="/search" method="GET">
-                        <input type="text" name="search" placeholder="search artist by members or by name" id="searchInput">
-                        <ul id="suggestions" class="suggList"></ul> <!-- liste des suggestion -->
-                        <button type="submit">search</button>
+                        <input type="text" name="search" placeholder="search artist" id="searchInput" value="">
+                        <ul id="suggestions" class="suggList4"></ul> <!-- liste des suggestion -->
+                        <div class="search"></div>
                     </form>
                 </div>
 
@@ -117,16 +131,6 @@
         </section>
 
     </main>
-
-    <footer>
-        <nav>
-            <ul>
-                <li>crédit un</li>
-                <li> crédit deux </li>
-                <li> crédit trois </li>
-            </ul>
-        </nav>
-    </footer>
     <script src="asset/js/script.js"></script>
 </body>
 </html>
